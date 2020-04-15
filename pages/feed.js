@@ -8,8 +8,7 @@ import { Fragment } from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex",
-    minHeight: "100vh"
+    display: "flex"
   },
   content: {
     flexGrow: 1,
@@ -23,7 +22,6 @@ export default function Feed() {
 
   return (
     <Fragment>
-      {/* <Navbar /> */}
       <div className={classes.root}>
         <Container className={classes.content}>
           <CommentCard />
