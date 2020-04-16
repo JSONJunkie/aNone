@@ -9,12 +9,11 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // display: "flex",
     minHeight: theme.spacing(10),
     marginBottom: theme.spacing(2)
   },
-  content: {
-    flexGrow: 1
+  icons: {
+    marginLeft: "auto"
   }
 }));
 
@@ -26,7 +25,7 @@ const CommentCard = ({ data: { author, comment } }) => {
         <Typography variant="h6">{author}</Typography>
         <Typography variant="body2">{comment}</Typography>
         <CardActions>
-          <IconButton size="small">
+          <IconButton className={classes.icons} size="small">
             <ThumbUpIcon />
           </IconButton>
           <IconButton size="small">
