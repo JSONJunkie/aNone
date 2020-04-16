@@ -18,8 +18,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 Feed.getInitialProps = async function (context) {
-  const res = await fetch("http://localhost:3000/api/commentStream");
+  const dev = process.env.NODE_ENV !== "production";
+
+  const baseUrl = dev
+    ? "http://localhost:3000"
+    : "http://drees1992-anone.herokuapp.com";
+  const res = await fetch(baseUrl + "/api/commentStream");
   const data = await res.json();
+
   return { data };
 };
 
