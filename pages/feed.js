@@ -17,50 +17,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// function fetcher(url) {
-//   return fetch(url).then(r => r.json());
-// }
-
 Feed.getInitialProps = async function (context) {
-  // const { data, error } = useSWR(`/api/commentStream`, fetcher);
-  // console.log(context);
-  // const { req } = context;
-  // console.log(req);
-  // const baseURL = req ? `${req.protocol}://${req.headers.host}` : "";
-  // const res = await fetch(baseURL + "/test");
   const res = await fetch("http://localhost:3000/api/commentStream");
-
   const data = await res.json();
-  console.log(data);
   return { data };
 };
 
-export default function Feed() {
+export default function Feed(props) {
   const classes = useStyles();
-
-  // return (
-  //   <main className="center">
-  //     <div className="quote">{quote}</div>
-  //     {author && <span className="author">- {author}</span>}
-  //   </main>
-  // );
 
   return (
     <Fragment>
       <div className={classes.root}>
         <Container className={classes.content}>
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
-          <CommentCard />
+          {props.data.map(comment => (
+            <CommentCard key={comment.id} data={comment} />
+          ))}
         </Container>
       </div>
     </Fragment>
