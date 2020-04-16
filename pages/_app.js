@@ -4,10 +4,11 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Provider } from "react-redux";
-import { createStore, aaplyMiddleware } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 
+import rootReducer from "../src/reducers";
 import theme from "../themes/theme";
 import Navbar from "../components/Navbar";
 
@@ -18,7 +19,7 @@ const middleware = [thunk];
 const store = createStore(
   rootReducer,
   initialState,
-  composeWithDevTools(aaplyMiddleware(...middleware))
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 
 export default function MyApp(props) {
