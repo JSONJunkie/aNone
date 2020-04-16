@@ -7,9 +7,9 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
-  let doc = await req.db.collection("comments").findOne();
-  //   console.log(doc);
-  res.json(doc);
+  let docs = await req.db.collection("comments").find().toArray();
+  //   console.log(docs);
+  res.json(docs);
 });
 
 export default handler;

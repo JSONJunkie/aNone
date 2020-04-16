@@ -23,7 +23,7 @@ Feed.getInitialProps = async function (context) {
   const baseUrl = dev
     ? "http://localhost:3000"
     : "http://drees1992-anone.herokuapp.com";
-  const res = await fetch(baseUrl + "/api/commentStream");
+  const res = await fetch(baseUrl + "/api/test");
   const data = await res.json();
 
   return { data };
