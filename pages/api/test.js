@@ -8,7 +8,7 @@ handler.use(middleware);
 
 handler.get(async (req, res) => {
   let doc = await req.db.collection("comments").findOne();
-  console.log(doc);
+  //   console.log(doc);
   res.json(doc);
 });
 
