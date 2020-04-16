@@ -14,4 +14,12 @@ handler.get(async (req, res) => {
   connection.close();
 });
 
+handler.post(async (req, res) => {
+  // const { Comments } = req.models;
+  // const { connection } = req.connection;
+  // const docs = await Comments.find();
+  // res.json(docs);
+  // connection.close();
+});
+
 export default handler;

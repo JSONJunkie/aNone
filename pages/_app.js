@@ -3,8 +3,23 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { Provider } from "react-redux";
+import { createStore, aaplyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+
 import theme from "../themes/theme";
 import Navbar from "../components/Navbar";
+
+const initialState = {};
+
+const middleware = [thunk];
+
+const store = createStore(
+  rootReducer,
+  initialState,
+  composeWithDevTools(aaplyMiddleware(...middleware))
+);
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -28,9 +43,11 @@ export default function MyApp(props) {
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Navbar />
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <CssBaseline />
+          <Navbar />
+          <Component {...pageProps} />
+        </Provider>
       </ThemeProvider>
     </React.Fragment>
   );
