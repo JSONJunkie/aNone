@@ -1,15 +1,17 @@
 import nextConnect from "next-connect";
 
-import middleware from "../../middleware/database";
+import middleware from "../../database";
 
 const handler = nextConnect();
 
 handler.use(middleware);
 
 handler.get(async (req, res) => {
-  let docs = await req.db.collection("comments").find().toArray();
-  //   console.log(docs);
+  const { Comments } = req.models;
+  const { connection } = req.connection;
+  const docs = await Comments.find();
   res.json(docs);
+  connection.close();
 });
 
 export default handler;

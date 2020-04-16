@@ -37,7 +37,7 @@ export default function Feed(props) {
       <div className={classes.root}>
         <Container className={classes.content}>
           {props.data.map(comment => (
-            <CommentCard key={comment.id} data={comment} />
+            <CommentCard key={comment._id} data={comment} />
           ))}
         </Container>
       </div>
