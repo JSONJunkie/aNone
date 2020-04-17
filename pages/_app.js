@@ -30,9 +30,7 @@ MyApp.getInitialProps = async function ({ Component, ctx }) {
 
   return { pageProps: pageProps };
 };
-function MyApp(props) {
-  const { Component, pageProps, store } = props;
-
+function MyApp({ Component, pageProps, store }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
@@ -64,7 +62,8 @@ function MyApp(props) {
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired
+  pageProps: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired
 };
 
 export default withRedux(makeStore)(MyApp);
