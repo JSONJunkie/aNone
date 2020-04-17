@@ -8,6 +8,14 @@ const CommentsSchema = new mongoose.Schema({
   author: {
     type: String,
     required: true
+  },
+  id: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: String,
+    required: true
   }
 });
 

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -32,14 +32,16 @@ const useStyles = makeStyles(theme => ({
 function fetcher(url) {
   return axios.get(url);
 }
-function Index({ send }) {
+function Index({ send, sent }) {
   const classes = useStyles();
 
   const { data, error } = useSWR("/api/test", fetcher);
-  console.log(data);
-  console.log(error);
+  // console.log(data);
+  // console.log(data && data.data);
+  // console.log(error);
 
   const [text, setText] = useState("");
+  const [posts, setPosts] = useState([]);
 
   const handleText = e => {
     setText(e.target.value);
@@ -49,6 +51,18 @@ function Index({ send }) {
     // e.preventDefault();
     send(text);
   };
+
+  useEffect(() => {
+    if (data) {
+      setPosts(data.data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (sent.comment) {
+      setPosts([sent, ...posts]);
+    }
+  }, [sent]);
 
   return (
     <Fragment>
@@ -78,9 +92,9 @@ function Index({ send }) {
               </Button>
             </Grid>
           </Grid>
-          {data &&
-            data.data.map(comment => (
-              <CommentCard key={comment._id} data={comment} />
+          {posts &&
+            posts.map(comment => (
+              <CommentCard key={comment.id} data={comment} />
             ))}
           {/* </form> */}
         </Container>
@@ -102,9 +116,12 @@ function Index({ send }) {
 // };
 
 Index.propTypes = {
-  send: PropTypes.func.isRequired
+  send: PropTypes.func.isRequired,
+  sent: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  sent: state.feed.sent
+});
 
 export default connect(mapStateToProps, { send })(Index);

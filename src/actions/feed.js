@@ -1,6 +1,6 @@
 // import useSWR from "swr";
 import axios from "axios";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import { SEND } from "./types";
 
@@ -15,12 +15,15 @@ const names = ["dog", "horse", "pig", "bird", "cat"];
 export const send = text => async dispatch => {
   const body = {
     comment: text,
-    author: names[Math.floor(Math.random() * 5)]
+    author: names[Math.floor(Math.random() * 5)],
+    id: uuidv4(),
+    date: new Date()
   };
 
   await axios.post(baseUrl + "/api/test", body);
 
   dispatch({
-    type: SEND
+    type: SEND,
+    payload: { sent: body }
   });
 };
