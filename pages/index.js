@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// const Index = ({ data, send }) => {
-export default function Index({ data }) {
+const Index = ({ data, send }) => {
+  // export default function Index({ data }) {
   const classes = useStyles();
 
   const [text, setText] = useState("");
@@ -75,7 +75,7 @@ export default function Index({ data }) {
       </div>
     </Fragment>
   );
-}
+};
 
 Index.getInitialProps = async function (context) {
   const dev = process.env.NODE_ENV !== "production";
@@ -95,4 +95,4 @@ Index.propTypes = {
 
 const mapStateToProps = state => ({});
 
-// export default connect(mapStateToProps, { send })(Index);
+export default connect(mapStateToProps, { send })(Index);
