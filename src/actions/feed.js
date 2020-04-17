@@ -8,7 +8,7 @@ const dev = process.env.NODE_ENV !== "production";
 
 const baseUrl = dev
   ? "http://localhost:3000"
-  : "http://drees1992-anone.herokuapp.com";
+  : "https://drees1992-anone.herokuapp.com";
 
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
