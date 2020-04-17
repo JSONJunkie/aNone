@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.10",
     "@material-ui/icons": "^4.9.1",
+    "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.24.0",
@@ -20,7 +21,8 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "swr": "^0.2.0"
+    "swr": "^0.2.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {},
   "scripts": {
