@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 import fetch from "isomorphic-unfetch";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,7 +11,6 @@ import Grid from "@material-ui/core/Grid";
 
 import CommentCard from "../components/CommentCard";
 import { send } from "../src/actions/feed";
-import { connect } from "mongoose";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,9 +28,7 @@ const useStyles = makeStyles(theme => ({
     height: "100%"
   }
 }));
-
-const Index = ({ data, send }) => {
-  // export default function Index({ data }) {
+function Index({ data }) {
   const classes = useStyles();
 
   const [text, setText] = useState("");
@@ -75,9 +73,9 @@ const Index = ({ data, send }) => {
       </div>
     </Fragment>
   );
-};
+}
 
-Index.getInitialProps = async function (context) {
+Index.getInitialProps = async function () {
   const dev = process.env.NODE_ENV !== "production";
 
   const baseUrl = dev
