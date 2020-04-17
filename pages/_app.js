@@ -7,23 +7,31 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
+import withRedux from "next-redux-wrapper";
 
 import rootReducer from "../src/reducers";
 import theme from "../themes/theme";
 import Navbar from "../components/Navbar";
 
-const initialState = {};
+const makeStore = initialState => {
+  const middleware = [thunk];
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
+  return store;
+};
 
-const middleware = [thunk];
+MyApp.getInitialProps = async function ({ Component, ctx }) {
+  const pageProps = Component.getInitialProps
+    ? await Component.getInitialProps(ctx)
+    : {};
 
-const store = createStore(
-  rootReducer,
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
-
-export default function MyApp(props) {
-  const { Component, pageProps } = props;
+  return { pageProps: pageProps };
+};
+function MyApp(props) {
+  const { Component, pageProps, store } = props;
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -58,3 +66,5 @@ MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired
 };
+
+export default withRedux(makeStore)(MyApp);
