@@ -23,7 +23,7 @@ handler.post(async (req, res) => {
     author
   });
   await entry.save();
-  res.status(200);
+  res.json(entry);
   connection.close();
 });
 

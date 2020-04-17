@@ -1,8 +1,8 @@
 import { Fragment, useState } from "react";
-import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import fetch from "isomorphic-unfetch";
+import axios from "axios";
 import PropTypes from "prop-types";
+import useSWR from "swr";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -28,8 +28,16 @@ const useStyles = makeStyles(theme => ({
     height: "100%"
   }
 }));
-function Index({ data }) {
+
+function fetcher(url) {
+  return axios.get(url);
+}
+function Index({ send }) {
   const classes = useStyles();
+
+  const { data, error } = useSWR("/api/test", fetcher);
+  console.log(data);
+  console.log(error);
 
   const [text, setText] = useState("");
 
@@ -38,6 +46,7 @@ function Index({ data }) {
   };
 
   const handleSend = e => {
+    // e.preventDefault();
     send(text);
   };
 
@@ -45,6 +54,7 @@ function Index({ data }) {
     <Fragment>
       <div className={classes.root}>
         <Container className={classes.content}>
+          {/* <form onSubmit={e => handleSend(e)}> */}
           <Grid container className={classes.input}>
             <Grid item xs={12} sm>
               <TextField
@@ -57,35 +67,39 @@ function Index({ data }) {
             </Grid>
             <Grid item xs={12} sm="auto">
               <Button
+                // type="submit"
                 className={classes.inputButton}
                 color="primary"
                 variant="contained"
+                onClick={e => handleSend(e)}
                 fullWidth
               >
                 Send!
               </Button>
             </Grid>
           </Grid>
-          {data.map(comment => (
-            <CommentCard key={comment._id} data={comment} />
-          ))}
+          {data &&
+            data.data.map(comment => (
+              <CommentCard key={comment._id} data={comment} />
+            ))}
+          {/* </form> */}
         </Container>
       </div>
     </Fragment>
   );
 }
 
-Index.getInitialProps = async function () {
-  const dev = process.env.NODE_ENV !== "production";
+// Index.getInitialProps = async function () {
+//   const dev = process.env.NODE_ENV !== "production";
 
-  const baseUrl = dev
-    ? "http://localhost:3000"
-    : "http://drees1992-anone.herokuapp.com";
-  const res = await fetch(baseUrl + "/api/test");
-  const data = await res.json();
+//   const baseUrl = dev
+//     ? "http://localhost:3000"
+//     : "http://drees1992-anone.herokuapp.com";
+//   const res = await fetch(baseUrl + "/api/test");
+//   const data = await res.json();
 
-  return { data };
-};
+//   return { data };
+// };
 
 Index.propTypes = {
   send: PropTypes.func.isRequired
