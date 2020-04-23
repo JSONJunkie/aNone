@@ -46,9 +46,9 @@ function getRollbar() {
   }
 }
 
-MyApp.getInitialProps = async function ({ Component, ctx }) {
-  const pageProps = Component.getInitialProps
-    ? await Component.getInitialProps(ctx)
+MyApp.getServerSideProps = async function ({ Component, ctx }) {
+  const pageProps = Component.getServerSideProps
+    ? await Component.getServerSideProps(ctx)
     : {};
 
   return { pageProps: pageProps };
