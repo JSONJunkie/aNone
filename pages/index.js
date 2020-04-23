@@ -48,11 +48,11 @@ function Index({ send, sent, rollbar }) {
   };
 
   const handleSend = e => {
-    // e.preventDefault();
-    // send(text);
+    e.preventDefault();
+    send(text);
     // throw new Error("test");
-    console.log(rollbar);
-    rollbar.error("hello");
+    // console.log(rollbar);
+    // rollbar.error("hello");
   };
 
   useEffect(() => {
