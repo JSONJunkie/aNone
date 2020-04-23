@@ -82,4 +82,4 @@ MyApp.propTypes = {
   store: PropTypes.object.isRequired
 };
 
-export default withRedux(makeStore)(MyApp);
+export default withRedux(makeStore, { ssr: false })(MyApp);
