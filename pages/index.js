@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 function fetcher(url) {
   return axios.get(url);
 }
-function Index({ send, sent }) {
+function Index({ send, sent, rollbar }) {
   const classes = useStyles();
 
   const { data, error } = useSWR("/api/test", fetcher);
@@ -49,7 +49,10 @@ function Index({ send, sent }) {
 
   const handleSend = e => {
     // e.preventDefault();
-    send(text);
+    // send(text);
+    // throw new Error("test");
+    console.log(rollbar);
+    rollbar.error("hello");
   };
 
   useEffect(() => {
@@ -117,7 +120,8 @@ function Index({ send, sent }) {
 
 Index.propTypes = {
   send: PropTypes.func.isRequired,
-  sent: PropTypes.object.isRequired
+  sent: PropTypes.object.isRequired,
+  rollbar: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

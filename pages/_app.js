@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import withRedux from "next-redux-wrapper";
+import Rollbar from "rollbar";
 
 import rootReducer from "../src/reducers";
 import theme from "../themes/theme";
@@ -22,6 +23,28 @@ const makeStore = initialState => {
   );
   return store;
 };
+
+function getRollbar() {
+  if (process.env.NODE_ENV === "development") {
+    const rollbar = new Rollbar({
+      accessToken: "3108bb03e49246d78fd95c737ea2ab33",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      environment: "development"
+    });
+    return rollbar;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    const rollbar = new Rollbar({
+      accessToken: "3108bb03e49246d78fd95c737ea2ab33",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      environment: "production"
+    });
+    return rollbar;
+  }
+}
 
 MyApp.getInitialProps = async function ({ Component, ctx }) {
   const pageProps = Component.getInitialProps
@@ -39,6 +62,8 @@ function MyApp({ Component, pageProps, store }) {
     }
   }, []);
 
+  const [rollbar] = React.useState(getRollbar());
+
   return (
     <React.Fragment>
       <Head>
@@ -53,7 +78,7 @@ function MyApp({ Component, pageProps, store }) {
         <Provider store={store}>
           <CssBaseline />
           <Navbar />
-          <Component {...pageProps} />
+          <Component rollbar={rollbar} {...pageProps} />
         </Provider>
       </ThemeProvider>
     </React.Fragment>
