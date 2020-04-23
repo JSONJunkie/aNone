@@ -45,15 +45,7 @@ function getRollbar() {
     return rollbar;
   }
 }
-
-MyApp.getServerSideProps = async function ({ Component, ctx }) {
-  const pageProps = Component.getServerSideProps
-    ? await Component.getServerSideProps(ctx)
-    : {};
-
-  return { pageProps: pageProps };
-};
-function MyApp({ Component, pageProps, store }) {
+function MyApp({ Component, store }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
@@ -78,7 +70,7 @@ function MyApp({ Component, pageProps, store }) {
         <Provider store={store}>
           <CssBaseline />
           <Navbar />
-          <Component rollbar={rollbar} {...pageProps} />
+          <Component rollbar={rollbar} />
         </Provider>
       </ThemeProvider>
     </React.Fragment>
@@ -87,7 +79,6 @@ function MyApp({ Component, pageProps, store }) {
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired
 };
 
