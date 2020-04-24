@@ -2,7 +2,8 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
-import { SEND } from "./types";
+import { SEND, ERROR, CLEAR_ERROR } from "./types";
+import Rollbar from "rollbar";
 
 const dev = process.env.NODE_ENV !== "production";
 
@@ -12,18 +13,47 @@ const baseUrl = dev
 
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
+export const clearError = () => async dispatch => {
+  try {
+    dispatch({
+      type: SEND,
+      payload: { sent: body }
+    });
+  } catch (e) {
+    Rollbar.error(e);
+    dispatch({
+      type: ERROR,
+      payload: {
+        name: e.name,
+        message: e.message
+      }
+    });
+  }
+};
+
 export const send = text => async dispatch => {
-  const body = {
-    comment: text,
-    author: names[Math.floor(Math.random() * 5)],
-    id: uuidv4(),
-    date: new Date()
-  };
+  try {
+    const body = {
+      comment: text,
+      author: names[Math.floor(Math.random() * 5)],
+      id: uuidv4(),
+      date: new Date()
+    };
 
-  await axios.post(baseUrl + "/api/test", body);
+    await axios.post(baseUrl + "/api/test", body);
 
-  dispatch({
-    type: SEND,
-    payload: { sent: body }
-  });
+    dispatch({
+      type: SEND,
+      payload: { sent: body }
+    });
+  } catch (e) {
+    Rollbar.error(e);
+    dispatch({
+      type: ERROR,
+      payload: {
+        name: e.name,
+        message: e.message
+      }
+    });
+  }
 };
