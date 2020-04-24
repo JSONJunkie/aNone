@@ -2,7 +2,7 @@ import { SEND, ERROR, CLEAR_ERROR } from "../actions/types";
 
 const initialState = {
   sent: {},
-  error: ""
+  actionError: ""
 };
 
 export default function (state = initialState, action) {
@@ -13,9 +13,9 @@ export default function (state = initialState, action) {
       return { ...state, sent };
     case ERROR:
       const { message } = payload;
-      return { ...state, error: message };
+      return { ...state, actionError: message };
     case CLEAR_ERROR:
-      return { ...state, error: "" };
+      return { ...state, actionError: "" };
     default:
       return state;
   }
