@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.10",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.50",
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "isomorphic-unfetch": "^3.0.0",
