@@ -3,26 +3,11 @@ import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunk from "redux-thunk";
-import withRedux from "next-redux-wrapper";
+import { withRedux } from "../lib/redux";
 import Rollbar from "rollbar";
 
-import rootReducer from "../src/reducers";
 import theme from "../themes/theme";
 import Navbar from "../components/Navbar";
-
-const makeStore = initialState => {
-  const middleware = [thunk];
-  const store = createStore(
-    rootReducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(...middleware))
-  );
-  return store;
-};
 
 function getRollbar() {
   if (process.env.NODE_ENV === "development") {
@@ -67,19 +52,16 @@ function MyApp({ Component, store }) {
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <Provider store={store}>
-          <CssBaseline />
-          <Navbar />
-          <Component rollbar={rollbar} />
-        </Provider>
+        <CssBaseline />
+        <Navbar />
+        <Component rollbar={rollbar} />
       </ThemeProvider>
     </React.Fragment>
   );
 }
 
 MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  store: PropTypes.object.isRequired
+  Component: PropTypes.elementType.isRequired
 };
 
-export default withRedux(makeStore, { ssr: false })(MyApp);
+export default withRedux(MyApp, { ssr: false });
