@@ -1,9 +1,7 @@
-// import useSWR from "swr";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 import { SEND, ERROR, CLEAR_ERROR } from "./types";
-import Rollbar from "rollbar";
 
 const dev = process.env.NODE_ENV !== "production";
 
@@ -13,16 +11,16 @@ const baseUrl = dev
 
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
-export const clearError = () => async dispatch => {
+export const clear = ({ rollbar }) => async dispatch => {
   try {
     dispatch({
       type: SEND,
       payload: { sent: body }
     });
   } catch (e) {
-    Rollbar.error(e);
+    rollbar.error(e);
     dispatch({
-      type: ERROR,
+      type: CLEAR_ERROR,
       payload: {
         name: e.name,
         message: e.message
@@ -31,7 +29,7 @@ export const clearError = () => async dispatch => {
   }
 };
 
-export const send = text => async dispatch => {
+export const send = ({ text, rollbar }) => async dispatch => {
   try {
     const body = {
       comment: text,
@@ -47,7 +45,7 @@ export const send = text => async dispatch => {
       payload: { sent: body }
     });
   } catch (e) {
-    Rollbar.error(e);
+    rollbar.error(e);
     dispatch({
       type: ERROR,
       payload: {
