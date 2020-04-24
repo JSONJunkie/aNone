@@ -14,35 +14,36 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
-  // const { Comments } = req.models;
-  // const { connection } = req.connection;
-  // const docs = await Comments.find().sort({ date: -1 });
-  // res.json(docs);
-  // connection.close();
-
   try {
-    throw new Error("test get server error");
+    const { Comments } = req.models;
+    const { connection } = req.connection;
+    const docs = await Comments.find().sort({ date: -1 });
+    res.json(docs);
+    connection.close();
   } catch (e) {
+    res.status(500).json({ errors: { name: e.name, message: e.message } });
+
     rollbar.error(e);
   }
 });
 
 handler.post(async (req, res) => {
-  // const { comment, author, id, date } = req.body;
-  // const { Comments } = req.models;
-  // const { connection } = req.connection;
-  // const entry = new Comments({
-  //   comment,
-  //   author,
-  //   id,
-  //   date
-  // });
-  // await entry.save();
-  // res.json(entry);
-  // connection.close();
   try {
-    throw new Error("test post server error");
+    const { comment, author, id, date } = req.body;
+    const { Comments } = req.models;
+    const { connection } = req.connection;
+    const entry = new Comments({
+      comment,
+      author,
+      id,
+      date
+    });
+    await entry.save();
+    res.json(entry);
+    connection.close();
   } catch (e) {
+    res.status(500).json({ errors: { name: e.name, message: e.message } });
+
     rollbar.error(e);
   }
 });
