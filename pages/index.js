@@ -115,35 +115,35 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
         </Container>
 
         <Container className={classes.content}>
-          {/* <form onSubmit={e => handleSend(e)}> */}
-          <Grid container className={classes.input}>
-            <Grid item xs={12} sm>
-              <TextField
-                name="input"
-                variant="outlined"
-                placeholder="Say something..."
-                onChange={e => handleText(e)}
-                fullWidth
-              />
+          <form onSubmit={e => handleSend(e)}>
+            <Grid container className={classes.input}>
+              <Grid item xs={12} sm>
+                <TextField
+                  name="input"
+                  variant="outlined"
+                  placeholder="Say something..."
+                  onChange={e => handleText(e)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm="auto">
+                <Button
+                  type="submit"
+                  className={classes.inputButton}
+                  color="primary"
+                  variant="contained"
+                  // onClick={e => handleSend(e)}
+                  fullWidth
+                >
+                  Send!
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm="auto">
-              <Button
-                // type="submit"
-                className={classes.inputButton}
-                color="primary"
-                variant="contained"
-                onClick={e => handleSend(e)}
-                fullWidth
-              >
-                Send!
-              </Button>
-            </Grid>
-          </Grid>
-          {posts &&
-            posts.map(comment => (
-              <CommentCard key={comment.id} data={comment} />
-            ))}
-          {/* </form> */}
+            {posts &&
+              posts.map(comment => (
+                <CommentCard key={comment.id} data={comment} />
+              ))}
+          </form>
         </Container>
       </div>
     </Fragment>
