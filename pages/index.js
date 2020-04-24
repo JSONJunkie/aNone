@@ -60,7 +60,7 @@ function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
   const [badAlert, setBadAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  handleError = message => {
+  const handleError = message => {
     setErrorMessage(prev => message);
     setBadAlert(prev => true);
     setTimeout(() => {
