@@ -64,4 +64,4 @@ MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired
 };
 
-export default withRedux(MyApp, { ssr: false });
+export default withRedux(MyApp);
