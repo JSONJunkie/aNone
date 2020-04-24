@@ -12,7 +12,7 @@ import Collapse from "@material-ui/core/Collapse";
 import Alert from "@material-ui/lab/Alert";
 
 import CommentCard from "../components/CommentCard";
-import { send, clearError } from "../src/actions/feed";
+import { send, clear } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
+function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
   const classes = useStyles();
 
   const { data, error } = useSWR("/api/test", url => {
@@ -69,7 +69,7 @@ function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
       setBadAlert(prev => false);
       setErrorMessage(prev => "");
     }, 5000);
-    clearError();
+    clear({ rollbar });
   };
 
   const handleText = e => {
@@ -78,7 +78,7 @@ function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
 
   const handleSend = e => {
     e.preventDefault();
-    send(text);
+    send({ text, rollbar });
     // throw new Error("test");
     // console.log(rollbar);
     // rollbar.error("hello");
@@ -164,7 +164,7 @@ function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
 
 Index.propTypes = {
   send: PropTypes.func.isRequired,
-  clearError: PropTypes.func.isRequired,
+  clear: PropTypes.func.isRequired,
   feed: PropTypes.object.isRequired,
   rollbar: PropTypes.object.isRequired
 };
@@ -173,4 +173,4 @@ const mapStateToProps = state => ({
   feed: state.feed
 });
 
-export default connect(mapStateToProps, { send })(Index);
+export default connect(mapStateToProps, { send, clear })(Index);
