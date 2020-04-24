@@ -45,6 +45,19 @@ export const send = ({ text, rollbar }) => async dispatch => {
       payload: { sent: body }
     });
   } catch (e) {
+    if (e.response) {
+      const errors = e.response.data.errors;
+      if (errors) {
+        rollbar.error(errors.message);
+        return dispatch({
+          type: ERROR,
+          payload: {
+            name: errors.namrrors,
+            message: errors.message
+          }
+        });
+      }
+    }
     rollbar.error(e);
     dispatch({
       type: ERROR,
