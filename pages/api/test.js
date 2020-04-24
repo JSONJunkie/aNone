@@ -1,5 +1,6 @@
 import nextConnect from "next-connect";
 import Rollbar from "rollbar";
+import validator from "validator";
 
 import middleware from "../../database";
 
@@ -29,6 +30,9 @@ handler.get(async (req, res) => {
 
 handler.post(async (req, res) => {
   try {
+    if (validator.isEmpty(req.body.comment)) {
+      throw new Error("Please write something!");
+    }
     const { comment, author, id, date } = req.body;
     const { Comments } = req.models;
     const { connection } = req.connection;
