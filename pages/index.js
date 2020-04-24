@@ -29,16 +29,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function fetcher(url) {
-  return axios.get(url);
-}
 function Index({ send, sent, rollbar }) {
   const classes = useStyles();
 
-  const { data, error } = useSWR("/api/test", fetcher);
-  // console.log(data);
-  // console.log(data && data.data);
-  // console.log(error);
+  const { data, error } = useSWR("/api/test", url => {
+    try {
+      return axios.get(url);
+    } catch (e) {
+      if (e.response) {
+        const errors = e.response.data.errors;
+        if (errors) {
+          throw new Error(errors.message);
+        }
+      }
+    }
+  });
+
+  if (error) {
+    console.log(error);
+  }
 
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
