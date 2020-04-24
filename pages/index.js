@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import CommentCard from "../components/CommentCard";
-import { send } from "../src/actions/feed";
+import { send, clearError } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,6 +19,12 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     paddingTop: theme.spacing(10)
+  },
+  alert: {
+    position: "absolute",
+    top: theme.spacing(1),
+    left: theme.spacing(0),
+    right: theme.spacing(0)
   },
   input: {
     marginTop: theme.spacing(1),
@@ -29,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Index({ send, sent, rollbar }) {
+function Index({ feed: { sent, actionError }, send, clearError, rollbar }) {
   const classes = useStyles();
 
   const { data, error } = useSWR("/api/test", url => {
@@ -51,6 +57,18 @@ function Index({ send, sent, rollbar }) {
 
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
+  const [badAlert, setBadAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  handleError = message => {
+    setErrorMessage(prev => message);
+    setBadAlert(prev => true);
+    setTimeout(() => {
+      setBadAlert(prev => false);
+      setErrorMessage(prev => "");
+    }, 5000);
+    clearError();
+  };
 
   const handleText = e => {
     setText(e.target.value);
@@ -63,6 +81,12 @@ function Index({ send, sent, rollbar }) {
     // console.log(rollbar);
     // rollbar.error("hello");
   };
+
+  useEffect(() => {
+    if (actionError) {
+      handleError(actionError);
+    }
+  }, [actionError]);
 
   useEffect(() => {
     if (data) {
@@ -79,6 +103,15 @@ function Index({ send, sent, rollbar }) {
   return (
     <Fragment>
       <div className={classes.root}>
+        <Container className={classes.alert}>
+          {/* <Collapse in={goodAlert}>
+            <Alert severity="success">Translated text saved!</Alert>
+          </Collapse> */}
+          <Collapse in={badAlert}>
+            <Alert severity="error">{errorMessage}</Alert>
+          </Collapse>
+        </Container>
+
         <Container className={classes.content}>
           {/* <form onSubmit={e => handleSend(e)}> */}
           <Grid container className={classes.input}>
@@ -129,12 +162,13 @@ function Index({ send, sent, rollbar }) {
 
 Index.propTypes = {
   send: PropTypes.func.isRequired,
-  sent: PropTypes.object.isRequired,
+  clearError: PropTypes.func.isRequired,
+  feed: PropTypes.object.isRequired,
   rollbar: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  sent: state.feed.sent
+  feed: state.feed
 });
 
 export default connect(mapStateToProps, { send })(Index);
