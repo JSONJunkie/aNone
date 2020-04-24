@@ -48,7 +48,6 @@ export const send = ({ text, rollbar }) => async dispatch => {
     if (e.response) {
       const errors = e.response.data.errors;
       if (errors) {
-        rollbar.error(errors.message);
         return dispatch({
           type: ERROR,
           payload: {
