@@ -8,8 +8,9 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
 import Alert from "@material-ui/lab/Alert";
-import { db } from "../services/firebase";
+import { useForm } from "react-hook-form";
 
+import { db } from "../services/firebase";
 import CommentCard from "../components/CommentCard";
 import { send, clear } from "../src/actions/feed";
 
@@ -36,13 +37,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
+const defaultValues = {
+  input: ""
+};
+
+function Index({ feed: { actionError }, send, clear, rollbar }) {
+  const { register, handleSubmit, errors, setValue, watch } = useForm({
+    defaultValues
+  });
+
   const classes = useStyles();
 
-  const [text, setText] = useState("");
+  const selectValue = watch("input");
   const [posts, setPosts] = useState([]);
   const [badAlert, setBadAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [validateError, setValidateError] = useState("");
+  const [isValidateError, setIsValidateError] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const handleError = message => {
     setErrorMessage(prev => message);
@@ -55,19 +67,33 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
   };
 
   const handleText = e => {
-    setText(e.target.value);
+    setValue("input", e.target.value);
   };
 
-  const handleSend = e => {
-    e.preventDefault();
-    send({ text, rollbar });
+  const handleSend = () => {
+    send({ text: selectValue, rollbar });
+    setResetting(prev => true);
   };
 
   useEffect(() => {
+    if (resetting) {
+      setValue("input", "");
+      setResetting(prev => false);
+    }
+  }, [resetting]);
+
+  useEffect(() => {
+    if (errors.input) {
+      setValidateError(prev => errors.input.message);
+      setIsValidateError(prev => true);
+    } else {
+      setValidateError(prev => "");
+      setIsValidateError(prev => false);
+    }
     if (actionError) {
       handleError(actionError);
     }
-  }, [actionError]);
+  }, [actionError, errors.input]);
 
   useEffect(() => {
     try {
@@ -89,23 +115,29 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
     <Fragment>
       <div className={classes.root}>
         <Container className={classes.alert}>
-          {/* <Collapse in={goodAlert}>
-            <Alert severity="success">Translated text saved!</Alert>
-          </Collapse> */}
           <Collapse in={badAlert}>
             <Alert severity="error">{errorMessage}</Alert>
           </Collapse>
         </Container>
-
         <Container className={classes.content}>
-          <form onSubmit={e => handleSend(e)}>
+          <form onSubmit={handleSubmit(handleSend)}>
             <Grid container className={classes.input}>
               <Grid item xs={12} sm>
                 <TextField
                   name="input"
+                  value={selectValue}
                   variant="outlined"
-                  placeholder="Say something..."
-                  onChange={e => handleText(e)}
+                  placeholder="What's on your mind?"
+                  inputRef={register({
+                    required: {
+                      value: true,
+                      message: "Please write something"
+                    }
+                  })}
+                  autoFocus
+                  helperText={validateError}
+                  error={isValidateError}
+                  onChange={handleText}
                   fullWidth
                 />
               </Grid>
@@ -115,7 +147,6 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
                   className={classes.inputButton}
                   color="primary"
                   variant="contained"
-                  // onClick={e => handleSend(e)}
                   fullWidth
                 >
                   Send!
