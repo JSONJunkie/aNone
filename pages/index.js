@@ -71,13 +71,15 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
 
   useEffect(() => {
     try {
-      db.ref("comments").on("value", snapshot => {
-        let chats = [];
-        snapshot.forEach(snap => {
-          chats.push(snap.val());
+      db.ref("comments")
+        .orderByChild("timestamp")
+        .on("value", snapshot => {
+          let chats = [];
+          snapshot.forEach(snap => {
+            chats.push(snap.val());
+          });
+          setPosts(prev => chats.reverse());
         });
-        setPosts(prev => chats);
-      });
     } catch (e) {
       rollbar.error(e);
     }
