@@ -31,7 +31,7 @@
   "devDependencies": {},
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next",
-    "build": "next build",
+    "build": "NODE_ENV=production next build",
     "start": "next start -p $PORT",
     "heroku-postbuild": "npm run build"
   },
