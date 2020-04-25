@@ -38,7 +38,7 @@ export const send = ({ text, rollbar }) => async dispatch => {
       date: new Date()
     };
 
-    // await axios.post(baseUrl + "/api/test", body);
+    await axios.post(baseUrl + "/api/test", body);
 
     dispatch({
       type: SEND,
