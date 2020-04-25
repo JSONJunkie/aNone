@@ -43,7 +43,7 @@ handler.post(async (req, res) => {
       date
     });
     await entry.save();
-    res.json(entry);
+    res.status(200).json(entry);
     connection.close();
   } catch (e) {
     res.status(500).json({ errors: { name: e.name, message: e.message } });
