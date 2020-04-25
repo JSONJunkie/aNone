@@ -8,13 +8,12 @@ const names = ["dog", "horse", "pig", "bird", "cat"];
 export const clear = ({ rollbar }) => async dispatch => {
   try {
     dispatch({
-      type: SEND,
-      payload: { sent: body }
+      type: CLEAR_ERROR
     });
   } catch (e) {
     rollbar.error(e);
     dispatch({
-      type: CLEAR_ERROR,
+      type: ERROR,
       payload: {
         name: e.name,
         message: e.message

@@ -1,4 +1,4 @@
-import { SEND, ERROR, CLEAR_ERROR } from "../actions/types";
+import { SEND, CLEAR, ERROR, CLEAR_ERROR } from "../actions/types";
 
 const initialState = {
   sent: {},
