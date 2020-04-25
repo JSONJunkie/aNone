@@ -3,12 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { SEND, ERROR, CLEAR_ERROR } from "./types";
 
-const dev = process.env.NODE_ENV !== "production";
-
-const baseUrl = dev
-  ? "http://localhost:3000"
-  : "https://drees1992-anone.herokuapp.com";
-
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
 export const clear = ({ rollbar }) => async dispatch => {
