@@ -1,8 +1,7 @@
 import nextConnect from "next-connect";
 import Rollbar from "rollbar";
 import validator from "validator";
-
-import middleware from "../../database";
+import { db } from "../../services/firebase";
 
 const rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_SERVER_TOKEN,
@@ -12,42 +11,22 @@ const rollbar = new Rollbar({
 
 const handler = nextConnect();
 
-handler.use(middleware);
-
-handler.get(async (req, res) => {
-  try {
-    const { Comments } = req.models;
-    const { connection } = req.connection;
-    const docs = await Comments.find().sort({ date: -1 });
-    res.json(docs);
-    connection.close();
-  } catch (e) {
-    res.status(500).json({ errors: { name: e.name, message: e.message } });
-
-    rollbar.error(e);
-  }
-});
-
 handler.post(async (req, res) => {
   try {
     if (validator.isEmpty(req.body.comment)) {
       throw new Error("Please write something!");
     }
-    const { comment, author, id, date } = req.body;
-    const { Comments } = req.models;
-    const { connection } = req.connection;
-    const entry = new Comments({
+    const { comment, author, id, timestamp } = req.body;
+    const entry = {
       comment,
       author,
       id,
-      date
-    });
-    await entry.save();
+      timestamp
+    };
+    await db.ref("comments").push(entry);
     res.status(200).json(entry);
-    connection.close();
   } catch (e) {
     res.status(500).json({ errors: { name: e.name, message: e.message } });
-
     rollbar.error(e);
   }
 });

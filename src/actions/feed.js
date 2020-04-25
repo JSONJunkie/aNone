@@ -29,7 +29,7 @@ export const send = ({ text, rollbar }) => async dispatch => {
       comment: text,
       author: names[Math.floor(Math.random() * 5)],
       id: uuidv4(),
-      date: new Date()
+      timestamp: new Date()
     };
 
     await axios.post("/api/test", body);

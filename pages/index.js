@@ -1,8 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 import PropTypes from "prop-types";
-import useSWR from "swr";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -10,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
 import Alert from "@material-ui/lab/Alert";
+import { db } from "../services/firebase";
 
 import CommentCard from "../components/CommentCard";
 import { send, clear } from "../src/actions/feed";
@@ -40,23 +39,6 @@ const useStyles = makeStyles(theme => ({
 function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
   const classes = useStyles();
 
-  const { data, error } = useSWR("/api/test", url => {
-    try {
-      return axios.get(url);
-    } catch (e) {
-      if (e.response) {
-        const errors = e.response.data.errors;
-        if (errors) {
-          throw new Error(errors.message);
-        }
-      }
-    }
-  });
-
-  if (error) {
-    console.log(error);
-  }
-
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
   const [badAlert, setBadAlert] = useState(false);
@@ -79,9 +61,6 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
   const handleSend = e => {
     e.preventDefault();
     send({ text, rollbar });
-    // throw new Error("test");
-    // console.log(rollbar);
-    // rollbar.error("hello");
   };
 
   useEffect(() => {
@@ -91,16 +70,18 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
   }, [actionError]);
 
   useEffect(() => {
-    if (data) {
-      setPosts(data.data);
+    try {
+      db.ref("comments").on("value", snapshot => {
+        let chats = [];
+        snapshot.forEach(snap => {
+          chats.push(snap.val());
+        });
+        setPosts(prev => chats);
+      });
+    } catch (e) {
+      rollbar.error(e);
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (sent.comment) {
-      setPosts([sent, ...posts]);
-    }
-  }, [sent]);
+  }, []);
 
   return (
     <Fragment>
@@ -149,18 +130,6 @@ function Index({ feed: { sent, actionError }, send, clear, rollbar }) {
     </Fragment>
   );
 }
-
-// Index.getInitialProps = async function () {
-//   const dev = process.env.NODE_ENV !== "production";
-
-//   const baseUrl = dev
-//     ? "http://localhost:3000"
-//     : "http://drees1992-anone.herokuapp.com";
-//   const res = await fetch(baseUrl + "/api/test");
-//   const data = await res.json();
-
-//   return { data };
-// };
 
 Index.propTypes = {
   send: PropTypes.func.isRequired,
