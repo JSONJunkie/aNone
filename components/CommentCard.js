@@ -24,15 +24,15 @@ const CommentCard = ({ data: { author, comment } }) => {
       <CardContent>
         <Typography variant="h6">{author}</Typography>
         <Typography variant="body2">{comment}</Typography>
-        <CardActions>
-          <IconButton className={classes.icons} size="small">
-            <ThumbUpIcon />
-          </IconButton>
-          <IconButton size="small">
-            <ThumbDownIcon />
-          </IconButton>
-        </CardActions>
       </CardContent>
+      <CardActions>
+        <IconButton className={classes.icons} size="small">
+          <ThumbUpIcon />
+        </IconButton>
+        <IconButton size="small">
+          <ThumbDownIcon />
+        </IconButton>
+      </CardActions>
     </Card>
   );
 };
