@@ -28,6 +28,8 @@ function Index({ rollbar }) {
 
   const [posts, setPosts] = useState([]);
 
+  console.log(typeof window);
+
   useEffect(() => {
     try {
       db.ref("comments")
