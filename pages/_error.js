@@ -34,7 +34,7 @@ Error.getInitialProps = ({ res, req, err }) => {
     console.log("Reporting error to Rollbar...");
     const Rollbar = require("rollbar");
     const rollbar = new Rollbar({
-      accessToken: process.env.ROLLBAR_SERVER_TOKEN,
+      // accessToken: process.env.ROLLBAR_SERVER_TOKEN,
       captureUncaught: true,
       captureUnhandledRejections: true
     });
