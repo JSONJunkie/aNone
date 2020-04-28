@@ -12,7 +12,7 @@ import Navbar from "../components/Navbar";
 function getRollbar() {
   if (process.env.NODE_ENV === "development") {
     const rollbar = new Rollbar({
-      accessToken: "3108bb03e49246d78fd95c737ea2ab33",
+      // accessToken: "3108bb03e49246d78fd95c737ea2ab33",
       captureUncaught: true,
       captureUnhandledRejections: true,
       environment: "development"
@@ -22,7 +22,7 @@ function getRollbar() {
 
   if (process.env.NODE_ENV === "production") {
     const rollbar = new Rollbar({
-      accessToken: "3108bb03e49246d78fd95c737ea2ab33",
+      // accessToken: "3108bb03e49246d78fd95c737ea2ab33",
       captureUncaught: true,
       captureUnhandledRejections: true,
       environment: "production"
