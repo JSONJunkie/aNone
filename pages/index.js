@@ -8,6 +8,9 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
 import Alert from "@material-ui/lab/Alert";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Paper from "@material-ui/core/Paper";
 import { useForm } from "react-hook-form";
 
 import { db } from "../services/firebase";
@@ -118,6 +121,18 @@ function Index({ feed: { actionError }, send, clear, rollbar }) {
           </Collapse>
         </Container>
         <Container className={classes.content}>
+          <Paper>
+            <Tabs
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+              centered
+            >
+              <Tab label="All" />
+              <Tab label="State" />
+              <Tab label="Local" />
+            </Tabs>
+          </Paper>
           <form onSubmit={handleSubmit(handleSend)}>
             <Grid container className={classes.input}>
               <Grid item xs={12} sm>
