@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Fragment } from "react";
 import AppBar from "@material-ui/core/AppBar";
@@ -6,23 +7,17 @@ import Slide from "@material-ui/core/Slide";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
+import Alerts from "./Alerts";
+
 const useStyles = makeStyles(theme => ({
   root: {
-    // display: "flex",
-    // height: theme.spacing(5)
-    // position: "absolute",
-    // top: "0px"
+    marginBottom: theme.spacing(1)
   }
-  // content: {
-  //   flexGrow: 1,
-  //   paddingTop: theme.spacing(5)
-  // }
 }));
 
 function HideOnScroll(props) {
   const { children, window } = props;
   const trigger = useScrollTrigger({ target: window ? window() : undefined });
-
   return (
     <Slide appear={false} direction="down" in={!trigger}>
       {children}
@@ -30,21 +25,26 @@ function HideOnScroll(props) {
   );
 }
 
-const Navbar = props => {
+const Navbar = ({ rollbar }) => {
   const classes = useStyles();
 
   return (
     <Fragment>
-      <HideOnScroll {...props}>
+      <HideOnScroll>
         <AppBar position="fixed">
           <Toolbar>
             <Typography>aNone</Typography>
+            <Alerts rollbar={rollbar} />
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Toolbar />
+      <Toolbar className={classes.root} />
     </Fragment>
   );
+};
+
+Navbar.propTypes = {
+  rollbar: PropTypes.object.isRequired
 };
 
 export default Navbar;

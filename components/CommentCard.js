@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,7 +11,7 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 const useStyles = makeStyles(theme => ({
   root: {
     minHeight: theme.spacing(10),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(1)
   },
   icons: {
     marginLeft: "auto"
@@ -35,6 +36,10 @@ const CommentCard = ({ data: { author, comment } }) => {
       </CardActions>
     </Card>
   );
+};
+
+CommentCard.propTypes = {
+  data: PropTypes.object.isRequired
 };
 
 export default CommentCard;
