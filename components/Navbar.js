@@ -35,15 +35,14 @@ const Navbar = props => {
 
   return (
     <Fragment>
-      <div className={classes.root}>
-        <HideOnScroll {...props}>
-          <AppBar position="fixed">
-            <Toolbar>
-              <Typography>aNone</Typography>
-            </Toolbar>
-          </AppBar>
-        </HideOnScroll>
-      </div>
+      <HideOnScroll {...props}>
+        <AppBar position="fixed">
+          <Toolbar>
+            <Typography>aNone</Typography>
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
+      <Toolbar />
     </Fragment>
   );
 };

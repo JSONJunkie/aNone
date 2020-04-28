@@ -19,12 +19,10 @@ const useStyles = makeStyles(theme => ({
     display: "flex"
   },
   content: {
-    flexGrow: 1,
-    paddingTop: theme.spacing(10)
+    flexGrow: 1
   },
   alert: {
     position: "absolute",
-    top: theme.spacing(10),
     left: theme.spacing(0),
     right: theme.spacing(0)
   },
