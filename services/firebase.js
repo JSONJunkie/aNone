@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 const config = {
-  apiKey: "AIzaSyBtVSLOKSMHEtZ17E4XTFcFASlEys-ahcE",
+  apiKey: process.env.FIREBASE_API,
   authDomain: "anone-ba646.firebaseapp.com",
   databaseURL: "https://anone-ba646.firebaseio.com"
 };
