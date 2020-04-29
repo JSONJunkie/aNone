@@ -11,6 +11,7 @@ import { db } from "../services/firebase";
 import CommentInput from "../components/CommentInput";
 import CommentCard from "../components/CommentCard";
 import { storePos, clear } from "../src/actions/feed";
+import { set } from "mongoose";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,20 +31,31 @@ const options = {
   maximumAge: 0
 };
 
-function Index({ feed: { sent }, storePos, clear, rollbar }) {
+function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
   const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
+  const [tab, setTab] = useState(0);
 
-  function handlePos(pos) {
+  const handlePos = pos => {
     const crd = pos.coords;
     storePos({ crd, rollbar });
-  }
+  };
 
-  function error(err) {
+  const error = err => {
     // console.warn(`ERROR(${err.code}): ${err.message}`);
     clear({ sent, rollbar });
-  }
+  };
+
+  const handleChange = (event, newValue) => {
+    setTab(prev => newValue);
+  };
+
+  useEffect(() => {
+    if (location) {
+      setTab(prev => 2);
+    }
+  }, [location]);
 
   useEffect(() => {
     try {
@@ -78,7 +90,8 @@ function Index({ feed: { sent }, storePos, clear, rollbar }) {
           <Paper>
             <Tabs
               className={classes.tabs}
-              value={1}
+              value={tab}
+              onChange={handleChange}
               indicatorColor="primary"
               textColor="primary"
               variant="fullWidth"

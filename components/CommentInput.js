@@ -23,7 +23,7 @@ const defaultValues = {
   input: ""
 };
 
-const CommentInput = ({ send, rollbar }) => {
+const CommentInput = ({ feed: { location }, send, rollbar }) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, setValue, watch } = useForm({
@@ -90,6 +90,7 @@ const CommentInput = ({ send, rollbar }) => {
             color="primary"
             variant="contained"
             fullWidth
+            disabled={!location}
           >
             Send!
           </Button>
@@ -104,4 +105,8 @@ CommentInput.propTypes = {
   rollbar: PropTypes.object.isRequired
 };
 
-export default connect(null, { send })(CommentInput);
+const mapStateToProps = state => ({
+  feed: state.feed
+});
+
+export default connect(mapStateToProps, { send })(CommentInput);
