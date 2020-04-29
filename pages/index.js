@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import { db } from "../services/firebase";
 import CommentInput from "../components/CommentInput";
 import CommentCard from "../components/CommentCard";
+import { storePos, clear } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,12 +24,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Index({ rollbar }) {
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function Index({ feed: { sent }, storePos, clear, rollbar }) {
   const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
 
-  console.log(typeof window);
+  function handlePos(pos) {
+    const crd = pos.coords;
+    storePos({ crd, rollbar });
+  }
+
+  function error(err) {
+    // console.warn(`ERROR(${err.code}): ${err.message}`);
+    clear({ sent, rollbar });
+  }
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        navigator.geolocation.getCurrentPosition(handlePos, error, options);
+      }
+    } catch (e) {
+      rollbar.error(e);
+    }
+  }, [sent]);
 
   useEffect(() => {
     try {
@@ -76,7 +101,13 @@ function Index({ rollbar }) {
 }
 
 Index.propTypes = {
+  storePos: PropTypes.func.isRequired,
+  clear: PropTypes.func.isRequired,
   rollbar: PropTypes.object.isRequired
 };
 
-export default connect(null)(Index);
+const mapStateToProps = state => ({
+  feed: state.feed
+});
+
+export default connect(mapStateToProps, { storePos, clear })(Index);
