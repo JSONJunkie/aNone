@@ -62,13 +62,6 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
   };
 
   useEffect(() => {
-    if (location) {
-      setTab(prev => "local");
-      setLoading(prev => true);
-    }
-  }, [location]);
-
-  useEffect(() => {
     try {
       if (typeof window !== "undefined") {
         navigator.geolocation.getCurrentPosition(handlePos, error, options);
