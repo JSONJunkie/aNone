@@ -44,7 +44,10 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
   const [loading, setLoading] = useState(true);
 
   const handlePos = pos => {
-    const crd = pos.coords;
+    const crd = {
+      latitude: pos.coords.latitude.toString(),
+      longitude: pos.coords.longitude.toString()
+    };
     storePos({ crd, rollbar });
   };
 
