@@ -47,10 +47,12 @@ export const clear = ({ sent, rollbar }) => async dispatch => {
   }
 };
 
-export const send = ({ text, rollbar }) => async dispatch => {
+export const send = ({ text, lat, long, rollbar }) => async dispatch => {
   try {
     const body = {
       comment: text,
+      lat,
+      long,
       author: names[Math.floor(Math.random() * 5)],
       id: uuidv4(),
       timestamp: new Date()

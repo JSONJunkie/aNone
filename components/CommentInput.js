@@ -23,7 +23,7 @@ const defaultValues = {
   input: ""
 };
 
-const CommentInput = ({ feed: { location }, send, rollbar }) => {
+const CommentInput = ({ feed: { location, lat, long }, send, rollbar }) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, setValue, watch } = useForm({
@@ -40,7 +40,7 @@ const CommentInput = ({ feed: { location }, send, rollbar }) => {
   };
 
   const handleSend = () => {
-    send({ text: selectValue, rollbar });
+    send({ text: selectValue, lat, long, rollbar });
     setResetting(prev => true);
   };
 
