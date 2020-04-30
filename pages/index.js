@@ -148,7 +148,10 @@ function Index({ feed: { location }, storePos, geoFail, rollbar }) {
           <CommentInput rollbar={rollbar} />
           {loading ? (
             <Grid container justify="center" alignItems="center">
-              <CircularProgress className={classes.loader} />
+              <CircularProgress
+                disableShrink={true}
+                className={classes.loader}
+              />
             </Grid>
           ) : (
             <Fragment>
