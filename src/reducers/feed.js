@@ -29,7 +29,7 @@ export default function (state = initialState, action) {
     case GEO_FAIL:
       return {
         ...state,
-        actionError: "You have not allowed location services",
+        actionError: "",
         lat: "",
         long: "",
         location: false
