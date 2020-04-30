@@ -46,7 +46,8 @@ function Index({
 
   const [posts, setPosts] = useState([]);
   const [tab, setTab] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
   const [geoStatus, setGeoStatus] = useState("");
 
   const handlePos = pos => {
@@ -64,7 +65,7 @@ function Index({
 
   const handleChange = (event, newValue) => {
     setTab(prev => newValue);
-    setLoading(prev => true);
+    setPostsLoading(prev => true);
   };
 
   useEffect(() => {
@@ -114,13 +115,13 @@ function Index({
               chats.push(snap.val());
             });
             setPosts(prev => chats.reverse());
-            setLoading(prev => false);
+            setPostsLoading(prev => false);
           });
       }
       if (tab === "state") {
         if (!location) {
           setPosts(prev => []);
-          setLoading(prev => false);
+          setPostsLoading(prev => false);
         }
         if (location) {
           db.ref("comments")
@@ -131,14 +132,14 @@ function Index({
                 chats.push(snap.val());
               });
               setPosts(prev => chats.reverse());
-              setLoading(prev => false);
+              setPostsLoading(prev => false);
             });
         }
       }
       if (tab === "local") {
         if (!location) {
           setPosts(prev => []);
-          setLoading(prev => false);
+          setPostsLoading(prev => false);
         }
         if (location) {
           db.ref("comments")
@@ -149,7 +150,7 @@ function Index({
                 chats.push(snap.val());
               });
               setPosts(prev => chats.reverse());
-              setLoading(prev => false);
+              setPostsLoading(prev => false);
             });
         }
       }
@@ -158,7 +159,17 @@ function Index({
     }
   }, [tab]);
 
-  return (
+  useEffect(() => {
+    if (!postsLoading) {
+      setPageLoading(false);
+    }
+  }, [postsLoading]);
+
+  return pageLoading ? (
+    <Grid container justify="center" alignItems="center">
+      <CircularProgress disableShrink={true} className={classes.loader} />
+    </Grid>
+  ) : (
     <Fragment>
       <div className={classes.root}>
         <Container className={classes.content}>
@@ -181,7 +192,7 @@ function Index({
             geo={{ handlePos, error, options, geoStatus }}
             rollbar={rollbar}
           />
-          {loading ? (
+          {postsLoading ? (
             <Grid container justify="center" alignItems="center">
               <CircularProgress
                 disableShrink={true}
