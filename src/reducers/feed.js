@@ -1,4 +1,10 @@
-import { SEND, STORE_POS, CLEAR, ERROR, CLEAR_ERROR } from "../actions/types";
+import {
+  SEND,
+  STORE_POS,
+  GEO_FAIL,
+  ERROR,
+  CLEAR_ERROR
+} from "../actions/types";
 
 const initialState = {
   sent: {},
@@ -20,10 +26,10 @@ export default function (state = initialState, action) {
     case ERROR:
       const { message } = payload;
       return { ...state, actionError: message };
-    case CLEAR:
+    case GEO_FAIL:
       return {
         ...state,
-        actionError: "",
+        actionError: "You have not allowed location services",
         lat: "",
         long: "",
         location: false

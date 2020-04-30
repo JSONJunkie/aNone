@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import { db } from "../services/firebase";
 import CommentInput from "../components/CommentInput";
 import CommentCard from "../components/CommentCard";
-import { storePos, clear } from "../src/actions/feed";
+import { storePos, geoFail } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,7 +36,7 @@ const options = {
   maximumAge: 0
 };
 
-function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
+function Index({ feed: { sent, location }, storePos, geoFail, rollbar }) {
   const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
@@ -53,7 +53,7 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
 
   const error = err => {
     // console.warn(`ERROR(${err.code}): ${err.message}`);
-    clear({ sent, rollbar });
+    geoFail({ rollbar });
   };
 
   const handleChange = (event, newValue) => {
@@ -174,7 +174,7 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
 
 Index.propTypes = {
   storePos: PropTypes.func.isRequired,
-  clear: PropTypes.func.isRequired,
+  geoFail: PropTypes.func.isRequired,
   rollbar: PropTypes.object.isRequired
 };
 
@@ -182,4 +182,4 @@ const mapStateToProps = state => ({
   feed: state.feed
 });
 
-export default connect(mapStateToProps, { storePos, clear })(Index);
+export default connect(mapStateToProps, { storePos, geoFail })(Index);

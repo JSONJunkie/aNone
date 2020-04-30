@@ -1,7 +1,7 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
-import { SEND, STORE_POS, ERROR, CLEAR, CLEAR_ERROR } from "./types";
+import { SEND, STORE_POS, ERROR, GEO_FAIL, CLEAR_ERROR } from "./types";
 
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
@@ -23,18 +23,28 @@ export const storePos = ({ crd, rollbar }) => async dispatch => {
   }
 };
 
-export const clear = ({ sent, rollbar }) => async dispatch => {
+export const geoFail = ({ rollbar }) => async dispatch => {
   try {
-    if (!sent) {
-      dispatch({
-        type: CLEAR_ERROR
-      });
-    }
-    if (sent) {
-      dispatch({
-        type: CLEAR
-      });
-    }
+    dispatch({
+      type: GEO_FAIL
+    });
+  } catch (e) {
+    rollbar.error(e);
+    dispatch({
+      type: ERROR,
+      payload: {
+        name: e.name,
+        message: e.message
+      }
+    });
+  }
+};
+
+export const clear = ({ rollbar }) => async dispatch => {
+  try {
+    dispatch({
+      type: CLEAR_ERROR
+    });
   } catch (e) {
     rollbar.error(e);
     dispatch({
