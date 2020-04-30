@@ -36,7 +36,7 @@ const options = {
   maximumAge: 0
 };
 
-function Index({ feed: { sent, location }, storePos, geoFail, rollbar }) {
+function Index({ feed: { location }, storePos, geoFail, rollbar }) {
   const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
