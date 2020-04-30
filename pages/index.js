@@ -89,8 +89,8 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
               chats.push(snap.val());
             });
             setPosts(prev => chats.reverse());
+            setLoading(prev => false);
           });
-        setLoading(prev => false);
       }
       if (tab === "state") {
         if (!location) {
@@ -106,8 +106,8 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
                 chats.push(snap.val());
               });
               setPosts(prev => chats.reverse());
+              setLoading(prev => false);
             });
-          setLoading(prev => false);
         }
       }
       if (tab === "local") {
@@ -124,8 +124,8 @@ function Index({ feed: { sent, location }, storePos, clear, rollbar }) {
                 chats.push(snap.val());
               });
               setPosts(prev => chats.reverse());
+              setLoading(prev => false);
             });
-          setLoading(prev => false);
         }
       }
     } catch (e) {
