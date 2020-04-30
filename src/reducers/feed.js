@@ -11,7 +11,8 @@ const initialState = {
   actionError: "",
   lat: "",
   long: "",
-  location: false
+  location: false,
+  geoFailStatus: false
 };
 
 export default function (state = initialState, action) {
@@ -32,7 +33,8 @@ export default function (state = initialState, action) {
         actionError: "",
         lat: "",
         long: "",
-        location: false
+        location: false,
+        geoFailStatus: true
       };
     case CLEAR_ERROR:
       return { ...state, actionError: "" };

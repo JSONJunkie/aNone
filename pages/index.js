@@ -36,12 +36,18 @@ const options = {
   maximumAge: 0
 };
 
-function Index({ feed: { location }, storePos, geoFail, rollbar }) {
+function Index({
+  feed: { geoFailStatus, location },
+  storePos,
+  geoFail,
+  rollbar
+}) {
   const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
   const [tab, setTab] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [geoStatus, setGeoStatus] = useState("");
 
   const handlePos = pos => {
     const crd = {
@@ -63,13 +69,39 @@ function Index({ feed: { location }, storePos, geoFail, rollbar }) {
 
   useEffect(() => {
     try {
-      if (typeof window !== "undefined") {
-        navigator.geolocation.getCurrentPosition(handlePos, error, options);
+      (async () => {
+        const status = await navigator.permissions.query({
+          name: "geolocation"
+        });
+        if (status.state === "prompt") {
+          setGeoStatus(prev => "prompt");
+        }
+        if (status.state === "granted") {
+          setGeoStatus(prev => "granted");
+          if (typeof window !== "undefined") {
+            navigator.geolocation.getCurrentPosition(handlePos, error, options);
+          }
+        }
+        if (status.state === "denied") {
+          setGeoStatus(prev => "denied");
+        }
+      })();
+    } catch (e) {
+      rollbar.error(e);
+    }
+  }, [location, geoFailStatus]);
+
+  useEffect(() => {
+    try {
+      if (tab === "state" || tab === "local") {
+        if (typeof window !== "undefined") {
+          navigator.geolocation.getCurrentPosition(handlePos, error, options);
+        }
       }
     } catch (e) {
       rollbar.error(e);
     }
-  }, [sent]);
+  }, [tab]);
 
   useEffect(() => {
     try {
@@ -145,7 +177,10 @@ function Index({ feed: { location }, storePos, geoFail, rollbar }) {
               <Tab label="Local" value="local" />
             </Tabs>
           </Paper>
-          <CommentInput rollbar={rollbar} />
+          <CommentInput
+            geo={{ handlePos, error, options, geoStatus }}
+            rollbar={rollbar}
+          />
           {loading ? (
             <Grid container justify="center" alignItems="center">
               <CircularProgress

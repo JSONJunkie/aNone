@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,7 +23,12 @@ const defaultValues = {
   input: ""
 };
 
-const CommentInput = ({ feed: { location, lat, long }, send, rollbar }) => {
+const CommentInput = ({
+  feed: { location, lat, long },
+  send,
+  rollbar,
+  geo: { handlePos, error, options, geoStatus }
+}) => {
   const classes = useStyles();
 
   const { register, handleSubmit, errors, setValue, watch } = useForm({
@@ -40,8 +45,14 @@ const CommentInput = ({ feed: { location, lat, long }, send, rollbar }) => {
   };
 
   const handleSend = () => {
-    send({ text: selectValue, lat, long, rollbar });
+    // send({ text: selectValue, lat, long, rollbar });
     setResetting(prev => true);
+  };
+
+  const handleAllow = () => {
+    if (typeof window !== "undefined") {
+      navigator.geolocation.getCurrentPosition(handlePos, error, options);
+    }
   };
 
   useEffect(() => {
@@ -64,37 +75,76 @@ const CommentInput = ({ feed: { location, lat, long }, send, rollbar }) => {
   return (
     <form onSubmit={handleSubmit(handleSend)}>
       <Grid container className={classes.input}>
-        <Grid item xs={12} sm>
-          <TextField
-            name="input"
-            value={selectValue}
-            variant="outlined"
-            placeholder="What's on your mind?"
-            inputRef={register({
-              required: {
-                value: true,
-                message: "Please write something"
-              }
-            })}
-            autoFocus
-            helperText={validateError}
-            error={isValidateError}
-            onChange={handleText}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm="auto">
-          <Button
-            type="submit"
-            className={classes.inputButton}
-            color="primary"
-            variant="contained"
-            fullWidth
-            disabled={!location}
-          >
-            Send!
-          </Button>
-        </Grid>
+        {geoStatus === "prompt" ? (
+          <Fragment>
+            <Grid item xs={12} sm>
+              <TextField
+                name="input"
+                value={selectValue}
+                variant="outlined"
+                placeholder="You must allow location to write a post"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: "Please write something"
+                  }
+                })}
+                autoFocus
+                helperText={validateError}
+                error={isValidateError}
+                onChange={handleText}
+                fullWidth
+                disabled={true}
+              />
+            </Grid>
+            <Grid item xs={12} sm="auto">
+              <Button
+                className={classes.inputButton}
+                color="primary"
+                variant="contained"
+                fullWidth
+                onClick={handleAllow}
+              >
+                Allow location
+              </Button>
+            </Grid>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Grid item xs={12} sm>
+              <TextField
+                name="input"
+                value={selectValue}
+                variant="outlined"
+                placeholder="You must allow location to write a post"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: "Please write something"
+                  }
+                })}
+                autoFocus
+                helperText={validateError}
+                error={isValidateError}
+                onChange={handleText}
+                fullWidth
+                disabled={!location}
+              />
+            </Grid>
+            <Grid item xs={12} sm="auto">
+              <Button
+                type="submit"
+                className={classes.inputButton}
+                color="primary"
+                variant="contained"
+                fullWidth
+                disabled={!location}
+              >
+                Send!
+              </Button>
+            </Grid>
+          </Fragment>
+        )}
       </Grid>
     </form>
   );
