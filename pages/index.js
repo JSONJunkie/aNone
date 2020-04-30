@@ -211,6 +211,7 @@ function Index({
 }
 
 Index.propTypes = {
+  feed: PropTypes.object.isRequired,
   storePos: PropTypes.func.isRequired,
   geoFail: PropTypes.func.isRequired,
   rollbar: PropTypes.object.isRequired

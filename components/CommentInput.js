@@ -45,7 +45,7 @@ const CommentInput = ({
   };
 
   const handleSend = () => {
-    // send({ text: selectValue, lat, long, rollbar });
+    send({ text: selectValue, lat, long, rollbar });
     setResetting(prev => true);
   };
 
@@ -151,8 +151,10 @@ const CommentInput = ({
 };
 
 CommentInput.propTypes = {
+  feed: PropTypes.object.isRequired,
   send: PropTypes.func.isRequired,
-  rollbar: PropTypes.object.isRequired
+  rollbar: PropTypes.object.isRequired,
+  geo: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
