@@ -24,7 +24,7 @@ const defaultValues = {
 };
 
 const CommentInput = ({
-  feed: { location, lat, long, geoFailStatus },
+  feed: { location, userCity, userState, geoFailStatus },
   send,
   errAlert,
   rollbar,
@@ -47,7 +47,7 @@ const CommentInput = ({
   };
 
   const handleSend = () => {
-    send({ text: selectValue, lat, long, rollbar });
+    send({ text: selectValue, userCity, userState, rollbar });
     setResetting(prev => true);
   };
 

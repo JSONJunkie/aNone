@@ -16,16 +16,20 @@ handler.post(async (req, res) => {
     if (validator.isEmpty(req.body.comment)) {
       throw new Error("Please write something!");
     }
-    if (validator.isEmpty(req.body.lat) || validator.isEmpty(req.body.long)) {
+    if (
+      validator.isEmpty(req.body.userCity) ||
+      validator.isEmpty(req.body.userState)
+    ) {
       throw new Error(
         "Location data not found, please be sure to enable location for your browser/device."
       );
     }
-    const { comment, lat, long, author, id, timestamp } = req.body;
+
+    const { comment, userCity, userState, author, id, timestamp } = req.body;
     const entry = {
       comment,
-      lat,
-      long,
+      userCity,
+      userState,
       author,
       id,
       timestamp

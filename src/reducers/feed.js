@@ -11,6 +11,8 @@ const initialState = {
   actionError: "",
   lat: "",
   long: "",
+  userCity: "",
+  userState: "",
   location: false,
   geoFailStatus: false
 };
@@ -22,8 +24,8 @@ export default function (state = initialState, action) {
       const { sent } = payload;
       return { ...state, sent };
     case STORE_POS:
-      const { lat, long } = payload;
-      return { ...state, lat, long, location: true };
+      const { lat, long, userCity, userState } = payload;
+      return { ...state, lat, long, userCity, userState, location: true };
     case ERROR:
       const { message } = payload;
       return { ...state, actionError: message };
