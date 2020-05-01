@@ -37,7 +37,7 @@ const options = {
 };
 
 function Index({
-  feed: { geoFailStatus, location, lat, long },
+  feed: { geoFailStatus, location, lat, long, userCity, userState },
   storePos,
   geoFail,
   rollbar
@@ -139,7 +139,8 @@ function Index({
         }
         if (location) {
           db.ref("comments")
-            .orderByChild("timestamp")
+            .orderByChild("userState")
+            .equalTo(userState)
             .on("value", snapshot => {
               let chats = [];
               snapshot.forEach(snap => {
@@ -157,7 +158,8 @@ function Index({
         }
         if (location) {
           db.ref("comments")
-            .orderByChild("timestamp")
+            .orderByChild("userCity")
+            .equalTo(userCity)
             .on("value", snapshot => {
               let chats = [];
               snapshot.forEach(snap => {
@@ -169,6 +171,7 @@ function Index({
         }
       }
     } catch (e) {
+      console.log(e);
       rollbar.error(e);
     }
   }, [tab, location]);
