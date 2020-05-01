@@ -165,7 +165,7 @@ function Index({
     } catch (e) {
       rollbar.error(e);
     }
-  }, [tab]);
+  }, [tab, location]);
 
   useEffect(() => {
     if (!postsLoading) {
