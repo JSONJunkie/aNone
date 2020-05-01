@@ -65,7 +65,9 @@ function Index({
 
   const handleChange = (event, newValue) => {
     setTab(prev => newValue);
-    setPostsLoading(prev => true);
+    if (newValue !== tab) {
+      setPostsLoading(prev => true);
+    }
   };
 
   useEffect(() => {
