@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { useForm } from "react-hook-form";
 
-import { send } from "../src/actions/feed";
+import { send, errAlert } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -24,8 +24,9 @@ const defaultValues = {
 };
 
 const CommentInput = ({
-  feed: { location, lat, long },
+  feed: { location, lat, long, geoFailStatus },
   send,
+  errAlert,
   rollbar,
   geo: { handlePos, error, options, geoStatus }
 }) => {
@@ -39,6 +40,7 @@ const CommentInput = ({
   const [validateError, setValidateError] = useState("");
   const [isValidateError, setIsValidateError] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [geoCheck, setGeoCheck] = useState(false);
 
   const handleText = e => {
     setValue("input", e.target.value);
@@ -53,7 +55,17 @@ const CommentInput = ({
     if (typeof window !== "undefined") {
       navigator.geolocation.getCurrentPosition(handlePos, error, options);
     }
+    setGeoCheck(prev => !prev);
   };
+
+  useEffect(() => {
+    if (geoFailStatus) {
+      errAlert({
+        message:
+          "Seems location permission was denied. Enable location for your browser/device."
+      });
+    }
+  }, [geoFailStatus, geoCheck]);
 
   useEffect(() => {
     if (resetting) {
@@ -111,38 +123,77 @@ const CommentInput = ({
           </Fragment>
         ) : (
           <Fragment>
-            <Grid item xs={12} sm>
-              <TextField
-                name="input"
-                value={selectValue}
-                variant="outlined"
-                placeholder="You must allow location to write a post"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: "Please write something"
-                  }
-                })}
-                autoFocus
-                helperText={validateError}
-                error={isValidateError}
-                onChange={handleText}
-                fullWidth
-                disabled={!location}
-              />
-            </Grid>
-            <Grid item xs={12} sm="auto">
-              <Button
-                type="submit"
-                className={classes.inputButton}
-                color="primary"
-                variant="contained"
-                fullWidth
-                disabled={!location}
-              >
-                Send!
-              </Button>
-            </Grid>
+            {location && (
+              <Fragment>
+                <Grid item xs={12} sm>
+                  <TextField
+                    name="input"
+                    value={selectValue}
+                    variant="outlined"
+                    placeholder="What's on your mind?"
+                    inputRef={register({
+                      required: {
+                        value: true,
+                        message: "Please write something"
+                      }
+                    })}
+                    autoFocus
+                    helperText={validateError}
+                    error={isValidateError}
+                    onChange={handleText}
+                    fullWidth
+                    disabled={!location}
+                  />
+                </Grid>
+                <Grid item xs={12} sm="auto">
+                  <Button
+                    type="submit"
+                    className={classes.inputButton}
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    disabled={!location}
+                  >
+                    Send!
+                  </Button>
+                </Grid>
+              </Fragment>
+            )}
+            {!location && (
+              <Fragment>
+                <Grid item xs={12} sm>
+                  <TextField
+                    name="input"
+                    value={selectValue}
+                    variant="outlined"
+                    placeholder="You must allow location to write a post"
+                    inputRef={register({
+                      required: {
+                        value: true,
+                        message: "Please write something"
+                      }
+                    })}
+                    autoFocus
+                    helperText={validateError}
+                    error={isValidateError}
+                    onChange={handleText}
+                    fullWidth
+                    disabled={!location}
+                  />
+                </Grid>
+                <Grid item xs={12} sm="auto">
+                  <Button
+                    className={classes.inputButton}
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    onClick={handleAllow}
+                  >
+                    Allow location
+                  </Button>
+                </Grid>
+              </Fragment>
+            )}
           </Fragment>
         )}
       </Grid>
@@ -161,4 +212,4 @@ const mapStateToProps = state => ({
   feed: state.feed
 });
 
-export default connect(mapStateToProps, { send })(CommentInput);
+export default connect(mapStateToProps, { send, errAlert })(CommentInput);

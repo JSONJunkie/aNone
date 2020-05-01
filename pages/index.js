@@ -70,23 +70,31 @@ function Index({
 
   useEffect(() => {
     try {
-      (async () => {
-        const status = await navigator.permissions.query({
-          name: "geolocation"
-        });
-        if (status.state === "prompt") {
-          setGeoStatus(prev => "prompt");
-        }
-        if (status.state === "granted") {
-          setGeoStatus(prev => "granted");
-          if (typeof window !== "undefined") {
-            navigator.geolocation.getCurrentPosition(handlePos, error, options);
+      if (navigator.permissions.query) {
+        (async () => {
+          const status = await navigator.permissions.query({
+            name: "geolocation"
+          });
+          if (status.state === "prompt") {
+            setGeoStatus(prev => "prompt");
           }
-        }
-        if (status.state === "denied") {
-          setGeoStatus(prev => "denied");
-        }
-      })();
+          if (status.state === "granted") {
+            setGeoStatus(prev => "granted");
+            if (typeof window !== "undefined") {
+              navigator.geolocation.getCurrentPosition(
+                handlePos,
+                error,
+                options
+              );
+            }
+          }
+          if (status.state === "denied") {
+            setGeoStatus(prev => "denied");
+          }
+        })();
+      } else {
+        setGeoStatus(prev => "n/a");
+      }
     } catch (e) {
       rollbar.error(e);
     }
