@@ -37,7 +37,7 @@ const options = {
 };
 
 function Index({
-  feed: { geoFailStatus, location },
+  feed: { geoFailStatus, location, lat, long },
   storePos,
   geoFail,
   rollbar
@@ -55,7 +55,11 @@ function Index({
       latitude: pos.coords.latitude.toString(),
       longitude: pos.coords.longitude.toString()
     };
-    storePos({ crd, rollbar });
+
+    if (lat && long) {
+    } else {
+      storePos({ crd, rollbar });
+    }
   };
 
   const error = err => {
