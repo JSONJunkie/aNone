@@ -5,6 +5,26 @@ import { SEND, STORE_POS, ERROR, GEO_FAIL, CLEAR_ERROR } from "./types";
 
 const names = ["dog", "horse", "pig", "bird", "cat"];
 
+export const errAlert = ({ message }) => async dispatch => {
+  try {
+    dispatch({
+      type: ERROR,
+      payload: {
+        message
+      }
+    });
+  } catch (e) {
+    rollbar.error(e);
+    dispatch({
+      type: ERROR,
+      payload: {
+        name: e.name,
+        message: e.message
+      }
+    });
+  }
+};
+
 export const storePos = ({ crd, rollbar }) => async dispatch => {
   try {
     dispatch({
