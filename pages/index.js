@@ -77,7 +77,7 @@ function Index({
 
   useEffect(() => {
     try {
-      if (navigator.permissions.query) {
+      if (typeof navigator.permissions !== "undefined") {
         (async () => {
           const status = await navigator.permissions.query({
             name: "geolocation"
