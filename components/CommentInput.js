@@ -98,7 +98,7 @@ const CommentInput = ({
     if (geoFailStatus) {
       errAlert({
         message:
-          "Seems location permission was denied. Enable location for your browser/device."
+          "There was a problem updating location. If location is enabled, please try again momentarily"
       });
     }
   }, [geoFailStatus, geoCheck]);
