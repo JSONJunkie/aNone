@@ -1,6 +1,8 @@
 import nextConnect from "next-connect";
 import Rollbar from "rollbar";
 import validator from "validator";
+import axios from "axios";
+
 import { db } from "../../services/firebase";
 
 const rollbar = new Rollbar({
@@ -10,6 +12,37 @@ const rollbar = new Rollbar({
 });
 
 const handler = nextConnect();
+
+handler.get(async (req, res) => {
+  try {
+    if (
+      validator.isEmpty(req.query.latitude) ||
+      validator.isEmpty(req.query.longitude)
+    ) {
+      throw new Error("There was a problem getting your location data.");
+    }
+
+    const { latitude, longitude } = req.query;
+
+    const url =
+      "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+      longitude +
+      "," +
+      latitude +
+      ".json?access_token=" +
+      process.env.MAPBOX_KEY;
+
+    const axiosRes = await axios.get(url);
+
+    const userCity = axiosRes.data.features[0].context[2].text;
+    const userState = axiosRes.data.features[0].context[3].text;
+
+    res.status(200).json({ userCity, userState });
+  } catch (e) {
+    res.status(500).json({ errors: { name: e.name, message: e.message } });
+    rollbar.error(e);
+  }
+});
 
 handler.post(async (req, res) => {
   try {

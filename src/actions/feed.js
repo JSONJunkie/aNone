@@ -29,17 +29,11 @@ export const storePos = ({ crd, rollbar }) => async dispatch => {
   try {
     const { latitude, longitude } = crd;
 
-    const url =
-      "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-      longitude +
-      "," +
-      latitude +
-      ".json?access_token=" +
-      process.env.MAPBOX_KEY;
-    const res = await axios.get(url);
+    const res = await axios.get(
+      "/api/test?latitude=" + latitude + "&longitude=" + longitude
+    );
 
-    const userCity = res.data.features[0].context[2].text;
-    const userState = res.data.features[0].context[3].text;
+    const { userCity, userState } = res.data;
 
     dispatch({
       type: STORE_POS,
