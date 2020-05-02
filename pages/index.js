@@ -178,8 +178,10 @@ function Index({
   }, [tab, location]);
 
   useEffect(() => {
-    if (!postsLoading && !loading) {
-      setPageLoading(false);
+    if (!postsLoading) {
+      if (!loading || geoStatus === "n/a") {
+        setPageLoading(false);
+      }
     }
   }, [postsLoading, loading]);
 
