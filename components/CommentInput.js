@@ -54,6 +54,9 @@ const CommentInput = ({
       setAllowed(prev => true);
     } else {
       storePos({ crd, rollbar });
+      if (typeof window !== "undefined") {
+        navigator.geolocation.getCurrentPosition(handlePos, error, options);
+      }
     }
   };
 
