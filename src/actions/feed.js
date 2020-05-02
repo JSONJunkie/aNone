@@ -46,6 +46,18 @@ export const storePos = ({ crd, rollbar }) => async dispatch => {
       payload: { lat: latitude, long: longitude, userCity, userState }
     });
   } catch (e) {
+    if (e.response) {
+      const errors = e.response.data.errors;
+      if (errors) {
+        return dispatch({
+          type: ERROR,
+          payload: {
+            name: errors.namrrors,
+            message: errors.message
+          }
+        });
+      }
+    }
     rollbar.error(e);
     dispatch({
       type: ERROR,
