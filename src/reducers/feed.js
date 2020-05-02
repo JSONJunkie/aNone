@@ -25,7 +25,15 @@ export default function (state = initialState, action) {
       return { ...state, sent };
     case STORE_POS:
       const { lat, long, userCity, userState } = payload;
-      return { ...state, lat, long, userCity, userState, location: true };
+      return {
+        ...state,
+        lat,
+        long,
+        userCity,
+        userState,
+        location: true,
+        geoFailStatus: false
+      };
     case ERROR:
       const { message } = payload;
       return { ...state, actionError: message };
