@@ -14,7 +14,8 @@ const initialState = {
   userCity: "",
   userState: "",
   location: false,
-  geoFailStatus: false
+  geoFailStatus: false,
+  loading: true
 };
 
 export default function (state = initialState, action) {
@@ -32,7 +33,8 @@ export default function (state = initialState, action) {
         userCity,
         userState,
         location: true,
-        geoFailStatus: false
+        geoFailStatus: false,
+        loading: false
       };
     case ERROR:
       const { message } = payload;
@@ -44,7 +46,8 @@ export default function (state = initialState, action) {
         lat: "",
         long: "",
         location: false,
-        geoFailStatus: true
+        geoFailStatus: true,
+        loading: false
       };
     case CLEAR_ERROR:
       return { ...state, actionError: "" };

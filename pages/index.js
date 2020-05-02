@@ -37,7 +37,7 @@ const options = {
 };
 
 function Index({
-  feed: { geoFailStatus, location, lat, long, userCity, userState },
+  feed: { geoFailStatus, location, lat, long, userCity, userState, loading },
   storePos,
   geoFail,
   rollbar
@@ -178,10 +178,10 @@ function Index({
   }, [tab, location]);
 
   useEffect(() => {
-    if (!postsLoading) {
+    if (!postsLoading && !loading) {
       setPageLoading(false);
     }
-  }, [postsLoading]);
+  }, [postsLoading, loading]);
 
   return pageLoading ? (
     <Grid container justify="center" alignItems="center">
