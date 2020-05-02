@@ -64,6 +64,7 @@ function Index({
 
   const error = err => {
     // console.warn(`ERROR(${err.code}): ${err.message}`);
+    console.log(err);
     geoFail({ rollbar });
   };
 
@@ -205,10 +206,7 @@ function Index({
               <Tab label="Local" value="local" />
             </Tabs>
           </Paper>
-          <CommentInput
-            geo={{ handlePos, error, options, geoStatus }}
-            rollbar={rollbar}
-          />
+          <CommentInput geo={{ error, options, geoStatus }} rollbar={rollbar} />
           {postsLoading ? (
             <Grid container justify="center" alignItems="center">
               <CircularProgress

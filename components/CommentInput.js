@@ -24,11 +24,11 @@ const defaultValues = {
 };
 
 const CommentInput = ({
-  feed: { location, userCity, userState, geoFailStatus },
+  feed: { location, userCity, userState, geoFailStatus, lat, long },
   send,
   errAlert,
   rollbar,
-  geo: { handlePos, error, options, geoStatus }
+  geo: { error, options, geoStatus }
 }) => {
   const classes = useStyles();
 
@@ -41,13 +41,31 @@ const CommentInput = ({
   const [isValidateError, setIsValidateError] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [geoCheck, setGeoCheck] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [allowed, setAllowed] = useState(false);
+
+  const handlePos = pos => {
+    const crd = {
+      latitude: pos.coords.latitude.toString(),
+      longitude: pos.coords.longitude.toString()
+    };
+
+    if (lat === crd.latitude && long === crd.longitude) {
+      setAllowed(prev => true);
+    } else {
+      storePos({ crd, rollbar });
+    }
+  };
 
   const handleText = e => {
     setValue("input", e.target.value);
   };
 
   const handleSend = () => {
-    send({ text: selectValue, userCity, userState, rollbar });
+    if (typeof window !== "undefined") {
+      navigator.geolocation.getCurrentPosition(handlePos, error, options);
+    }
+    setSending(prev => true);
     setResetting(prev => true);
   };
 
@@ -59,6 +77,20 @@ const CommentInput = ({
   };
 
   useEffect(() => {
+    if (allowed) {
+      setAllowed(prev => false);
+      if (sending) {
+        setSending(prev => false);
+        send({ text: selectValue, userCity, userState, rollbar });
+        if (resetting) {
+          setValue("input", "");
+          setResetting(prev => false);
+        }
+      }
+    }
+  }, [sending, allowed, resetting]);
+
+  useEffect(() => {
     if (geoFailStatus) {
       errAlert({
         message:
@@ -66,13 +98,6 @@ const CommentInput = ({
       });
     }
   }, [geoFailStatus, geoCheck]);
-
-  useEffect(() => {
-    if (resetting) {
-      setValue("input", "");
-      setResetting(prev => false);
-    }
-  }, [resetting]);
 
   useEffect(() => {
     if (errors.input) {
