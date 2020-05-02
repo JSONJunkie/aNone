@@ -56,7 +56,7 @@ function Index({
       longitude: pos.coords.longitude.toString()
     };
 
-    if (lat && long) {
+    if (lat === crd.latitude && long === crd.longitude) {
     } else {
       storePos({ crd, rollbar });
     }
