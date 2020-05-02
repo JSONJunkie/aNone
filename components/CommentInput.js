@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { useForm } from "react-hook-form";
 
-import { send, errAlert } from "../src/actions/feed";
+import { send, storePos, errAlert } from "../src/actions/feed";
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -25,6 +25,7 @@ const defaultValues = {
 
 const CommentInput = ({
   feed: { location, userCity, userState, geoFailStatus, lat, long },
+  storePos,
   send,
   errAlert,
   rollbar,
@@ -231,7 +232,9 @@ const CommentInput = ({
 
 CommentInput.propTypes = {
   feed: PropTypes.object.isRequired,
+  storePos: PropTypes.func.isRequired,
   send: PropTypes.func.isRequired,
+  errAlert: PropTypes.func.isRequired,
   rollbar: PropTypes.object.isRequired,
   geo: PropTypes.object.isRequired
 };
@@ -240,4 +243,6 @@ const mapStateToProps = state => ({
   feed: state.feed
 });
 
-export default connect(mapStateToProps, { send, errAlert })(CommentInput);
+export default connect(mapStateToProps, { send, storePos, errAlert })(
+  CommentInput
+);
