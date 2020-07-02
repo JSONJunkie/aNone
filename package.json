@@ -9,6 +9,7 @@
     "@material-ui/lab": "^4.0.0-alpha.50",
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
     "firebase": "^7.14.2",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.24.0",
