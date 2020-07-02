@@ -15,32 +15,32 @@ import CommentInput from "../components/CommentInput";
 import CommentCard from "../components/CommentCard";
 import { storePos, geoFail } from "../src/actions/feed";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   content: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   tabs: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   loader: {
-    marginTop: theme.spacing(10)
-  }
+    marginTop: theme.spacing(10),
+  },
 }));
 
 const options = {
   enableHighAccuracy: true,
   timeout: 5000,
-  maximumAge: 0
+  maximumAge: 0,
 };
 
 function Index({
   feed: { geoFailStatus, location, lat, long, userCity, userState, loading },
   storePos,
   geoFail,
-  rollbar
+  rollbar,
 }) {
   const classes = useStyles();
 
@@ -50,10 +50,10 @@ function Index({
   const [pageLoading, setPageLoading] = useState(true);
   const [geoStatus, setGeoStatus] = useState("");
 
-  const handlePos = pos => {
+  const handlePos = (pos) => {
     const crd = {
       latitude: pos.coords.latitude.toString(),
-      longitude: pos.coords.longitude.toString()
+      longitude: pos.coords.longitude.toString(),
     };
 
     if (lat === crd.latitude && long === crd.longitude) {
@@ -62,16 +62,16 @@ function Index({
     }
   };
 
-  const error = err => {
+  const error = (err) => {
     // console.warn(`ERROR(${err.code}): ${err.message}`);
     console.log(err);
     geoFail({ rollbar });
   };
 
   const handleChange = (event, newValue) => {
-    setTab(prev => newValue);
+    setTab((prev) => newValue);
     if (newValue !== tab) {
-      setPostsLoading(prev => true);
+      setPostsLoading((prev) => true);
     }
   };
 
@@ -80,13 +80,14 @@ function Index({
       if (typeof navigator.permissions !== "undefined") {
         (async () => {
           const status = await navigator.permissions.query({
-            name: "geolocation"
+            name: "geolocation",
           });
+          console.log(status.state);
           if (status.state === "prompt") {
-            setGeoStatus(prev => "prompt");
+            setGeoStatus((prev) => "prompt");
           }
           if (status.state === "granted") {
-            setGeoStatus(prev => "granted");
+            setGeoStatus((prev) => "granted");
             if (typeof window !== "undefined") {
               navigator.geolocation.getCurrentPosition(
                 handlePos,
@@ -96,11 +97,11 @@ function Index({
             }
           }
           if (status.state === "denied") {
-            setGeoStatus(prev => "denied");
+            setGeoStatus((prev) => "denied");
           }
         })();
       } else {
-        setGeoStatus(prev => "n/a");
+        setGeoStatus((prev) => "n/a");
       }
     } catch (e) {
       rollbar.error(e);
@@ -124,50 +125,50 @@ function Index({
       if (tab === "all") {
         db.ref("comments")
           .orderByChild("timestamp")
-          .on("value", snapshot => {
+          .on("value", (snapshot) => {
             let chats = [];
-            snapshot.forEach(snap => {
+            snapshot.forEach((snap) => {
               chats.push(snap.val());
             });
-            setPosts(prev => chats.reverse());
-            setPostsLoading(prev => false);
+            setPosts((prev) => chats.reverse());
+            setPostsLoading((prev) => false);
           });
       }
       if (tab === "state") {
         if (!location) {
-          setPosts(prev => []);
-          setPostsLoading(prev => false);
+          setPosts((prev) => []);
+          setPostsLoading((prev) => false);
         }
         if (location) {
           db.ref("comments")
             .orderByChild("userState")
             .equalTo(userState)
-            .on("value", snapshot => {
+            .on("value", (snapshot) => {
               let chats = [];
-              snapshot.forEach(snap => {
+              snapshot.forEach((snap) => {
                 chats.push(snap.val());
               });
-              setPosts(prev => chats.reverse());
-              setPostsLoading(prev => false);
+              setPosts((prev) => chats.reverse());
+              setPostsLoading((prev) => false);
             });
         }
       }
       if (tab === "local") {
         if (!location) {
-          setPosts(prev => []);
-          setPostsLoading(prev => false);
+          setPosts((prev) => []);
+          setPostsLoading((prev) => false);
         }
         if (location) {
           db.ref("comments")
             .orderByChild("userCity")
             .equalTo(userCity)
-            .on("value", snapshot => {
+            .on("value", (snapshot) => {
               let chats = [];
-              snapshot.forEach(snap => {
+              snapshot.forEach((snap) => {
                 chats.push(snap.val());
               });
-              setPosts(prev => chats.reverse());
-              setPostsLoading(prev => false);
+              setPosts((prev) => chats.reverse());
+              setPostsLoading((prev) => false);
             });
         }
       }
@@ -178,6 +179,9 @@ function Index({
   }, [tab, location]);
 
   useEffect(() => {
+    if (geoStatus === "prompt") {
+      setPageLoading(false);
+    }
     if (!postsLoading) {
       if (!loading || geoStatus === "n/a") {
         setPageLoading(false);
@@ -219,7 +223,7 @@ function Index({
           ) : (
             <Fragment>
               {posts.length > 0 ? (
-                posts.map(comment => (
+                posts.map((comment) => (
                   <CommentCard key={comment.id} data={comment} />
                 ))
               ) : (
@@ -242,11 +246,11 @@ Index.propTypes = {
   feed: PropTypes.object.isRequired,
   storePos: PropTypes.func.isRequired,
   geoFail: PropTypes.func.isRequired,
-  rollbar: PropTypes.object.isRequired
+  rollbar: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  feed: state.feed
+const mapStateToProps = (state) => ({
+  feed: state.feed,
 });
 
 export default connect(mapStateToProps, { storePos, geoFail })(Index);
