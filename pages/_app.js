@@ -8,6 +8,7 @@ import Rollbar from "rollbar";
 
 import theme from "../themes/theme";
 import Navbar from "../components/Navbar";
+import Copyright from "../components/Copyright";
 
 function getRollbar() {
   if (process.env.NODE_ENV === "development") {
@@ -55,6 +56,7 @@ function MyApp({ Component, store }) {
         <CssBaseline />
         <Navbar rollbar={rollbar} />
         <Component rollbar={rollbar} />
+        <Copyright />
       </ThemeProvider>
     </React.Fragment>
   );
